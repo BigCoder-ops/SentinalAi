@@ -17,13 +17,28 @@ import {
   Plus,
   Play,
   RotateCw,
-  Globe
+  Globe,
+  Smartphone,
+  Download,
+  Copy,
+  MapPin,
+  Lock,
+  MessageCircle, 
+  Share2,
+  Volume2,
+  Navigation,
+  QrCode,
+  ExternalLink,
+  Edit3,
+  Map as MapIcon,
+  Search
 } from 'lucide-react';
 
 /**
- * SENTINEL AI - v9.8 "TACTICAL UPLOAD FIX"
+ * SENTINEL AI - v11.3 "GLOBAL OVERWATCH" EDITION (Clipboard Fix)
  * Theme: Cybernetic HUD / Glassmorphism
- * Fixes: Upload Box UX (Click anywhere to add), Thumbnail Styling
+ * Feature: Enhanced Map Search with Bounding Box Support
+ * Fix: Replaced Clipboard API with execCommand fallback for iframe compatibility
  */
 
 // --- Configuration ---
@@ -57,18 +72,18 @@ const TRANSLATIONS = {
     voice: "Broadcast Script",
     actionPlan: "Response Protocol",
     log: "Incident Log",
-    call911: "Emergency Call",
+    call911: "Emergency Handoff",
     newScan: "Reset System",
     types: ["Uncertain / General", "Medical Emergency", "Fire / Hazard", "Natural Disaster", "Traffic Accident", "Violence / Threat"]
   },
-  es: { heroTitle: "Inteligencia de Crisis.", heroSubtitle: "Protocolos de respuesta inmediata guiados por IA.", enter: "Activar Sistema", demo: "Ejecutar Simulación", status: "SISTEMA LISTO", upload: "Subir datos visuales", analyzing: "Analizando...", tapCapture: "Subir Foto", orUpload: "Soporte: JPG, PNG", analyze: "Evaluar Amenaza", call911: "Llamada Emergencia", newScan: "Nuevo Incidente", hazards: "Amenazas", voice: "Guión", actionPlan: "Protocolo", log: "Reporte", severity: "Severidad", types: ["General", "Médico", "Fuego", "Desastre", "Tráfico", "Violencia"] },
-  fr: { heroTitle: "Intelligence de Crise.", heroSubtitle: "Protocoles d'intervention immédiate guidés par l'IA.", enter: "Activer Système", demo: "Lancer Simulation", status: "SYSTÈME PRÊT", upload: "Télécharger données", analyzing: "Analyse...", tapCapture: "Photo Scène", orUpload: "Support: JPG, PNG", analyze: "Évaluer Menace", call911: "Appel Urgence", newScan: "Nouvel Incident", hazards: "Menaces", voice: "Script", actionPlan: "Protocole", log: "Rapport", severity: "Sévérité", types: ["Général", "Médical", "Feu", "Catastrophe", "Trafic", "Violence"] },
-  de: { heroTitle: "Krisenintelligenz.", heroSubtitle: "Sofortige, KI-gesteuerte Reaktionsprotokolle.", enter: "System Aktivieren", demo: "Simulation Starten", status: "SYSTEM BEREIT", upload: "Daten hochladen", analyzing: "Analysiere...", tapCapture: "Foto hochladen", orUpload: "Format: JPG, PNG", analyze: "Bedrohung Prüfen", call911: "Notruf", newScan: "Neuer Vorfall", hazards: "Gefahren", voice: "Skript", actionPlan: "Protokoll", log: "Bericht", severity: "Schweregrad", types: ["Allgemein", "Medizinisch", "Feuer", "Katastrophe", "Verkehr", "Gewalt"] }
+  es: { heroTitle: "Inteligencia de Crisis.", heroSubtitle: "Protocolos de respuesta inmediata guiados por IA.", enter: "Activar Sistema", demo: "Ejecutar Simulación", status: "SISTEMA LISTO", upload: "Subir datos visuales", analyzing: "Analizando...", tapCapture: "Subir Foto", orUpload: "Soporte: JPG, PNG", analyze: "Evaluar Amenaza", call911: "Protocolo Emergencia", newScan: "Nuevo Incidente", hazards: "Amenazas", voice: "Guión", actionPlan: "Protocolo", log: "Reporte", severity: "Severidad", types: ["General", "Médico", "Fuego", "Desastre", "Tráfico", "Violencia"] },
+  fr: { heroTitle: "Intelligence de Crise.", heroSubtitle: "Protocoles d'intervention immédiate guidés par l'IA.", enter: "Activer Système", demo: "Lancer Simulation", status: "SYSTÈME PRÊT", upload: "Télécharger données", analyzing: "Analyse...", tapCapture: "Photo Scène", orUpload: "Support: JPG, PNG", analyze: "Évaluer Menace", call911: "Protocole Urgence", newScan: "Nouvel Incident", hazards: "Menaces", voice: "Script", actionPlan: "Protocole", log: "Rapport", severity: "Sévérité", types: ["Général", "Médical", "Feu", "Catastrophe", "Trafic", "Violence"] },
+  de: { heroTitle: "Krisenintelligenz.", heroSubtitle: "Sofortige, KI-gesteuerte Reaktionsprotokolle.", enter: "System Aktivieren", demo: "Simulation Starten", status: "SYSTEM BEREIT", upload: "Daten hochladen", analyzing: "Analysiere...", tapCapture: "Foto hochladen", orUpload: "Format: JPG, PNG", analyze: "Bedrohung Prüfen", call911: "Notfall Protokoll", newScan: "Neuer Vorfall", hazards: "Gefahren", voice: "Skript", actionPlan: "Protokoll", log: "Bericht", severity: "Schweregrad", types: ["Allgemein", "Medizinisch", "Feuer", "Katastrophe", "Verkehr", "Gewalt"] }
 };
 
 // --- CSS STYLES ---
 const cssStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
   :root {
     --bg-deep: #020617;
@@ -334,30 +349,116 @@ const cssStyles = `
 
   /* Severity Borders */
   .sev-critical { border-left: 4px solid #ef4444; }
-  .sev-high { 
-    border-left: 4px solid #f97316; 
-    background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(2, 6, 23, 0.9));
-    box-shadow: 0 10px 40px -10px rgba(249, 115, 22, 0.3);
-    border-top: 1px solid rgba(249, 115, 22, 0.2);
-    border-right: 1px solid rgba(249, 115, 22, 0.2);
-    border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+  .sev-high { border-left: 4px solid #f97316; }
+  .sev-medium { border-left: 4px solid #eab308; }
+  .sev-low { border-left: 4px solid #0ea5e9; }
+
+  /* Expanded Modal Styles */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(2, 6, 23, 0.95);
+    backdrop-filter: blur(16px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    animation: slideUpFade 0.3s var(--ease);
   }
-  .sev-medium { 
-    border-left: 4px solid #eab308; 
-    background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(2, 6, 23, 0.9));
-    box-shadow: 0 10px 40px -10px rgba(234, 179, 8, 0.3);
-    border-top: 1px solid rgba(234, 179, 8, 0.2);
-    border-right: 1px solid rgba(234, 179, 8, 0.2);
-    border-bottom: 1px solid rgba(234, 179, 8, 0.2);
+  
+  .modal-content {
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 1));
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    box-shadow: 0 0 80px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
+    border-radius: 24px;
+    padding: 2rem;
+    max-width: 950px; width: 100%; max-height: 90vh; overflow-y: auto;
+    position: relative;
+    display: flex; flex-direction: column; gap: 1.5rem;
   }
-  .sev-low { 
-    border-left: 4px solid #22c55e; 
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(2, 6, 23, 0.9));
-    box-shadow: 0 10px 40px -10px rgba(34, 197, 94, 0.3);
-    border-top: 1px solid rgba(34, 197, 94, 0.2);
-    border-right: 1px solid rgba(34, 197, 94, 0.2);
-    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+  
+  .modal-header-row {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;
   }
+  
+  .warning-banner {
+    background: rgba(239, 68, 68, 0.15); color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    padding: 1rem; border-radius: 12px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.9rem; margin-bottom: 0.5rem;
+  }
+
+  .handoff-grid {
+    display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+  }
+  @media (min-width: 800px) { .handoff-grid { grid-template-columns: 1fr 1fr; } }
+
+  .script-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 1.5rem;
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  
+  .script-text {
+    font-size: 1.2rem; line-height: 1.6; color: white;
+    font-weight: 500; font-family: 'Inter', sans-serif;
+    background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;
+    border-left: 4px solid var(--primary);
+  }
+
+  .action-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+
+  .quick-btn {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    padding: 1rem; border-radius: 12px; gap: 8px; cursor: pointer; transition: 0.2s;
+    color: var(--text-muted); text-decoration: none;
+  }
+  .quick-btn:hover { background: rgba(255,255,255,0.1); color: white; border-color: white; }
+  
+  .qr-box {
+    background: white; padding: 10px; border-radius: 12px;
+    width: 140px; height: 140px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .loc-status {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+    display: flex; align-items: center; gap: 8px; margin-top: 8px;
+    cursor: pointer; padding: 8px; border-radius: 8px;
+    transition: 0.2s;
+  }
+  .loc-status:hover {
+    background: rgba(14, 165, 233, 0.1);
+  }
+  .pulse-dot { width: 8px; height: 8px; background: #0ea5e9; border-radius: 50%; animation: pulse-ring 2s infinite; }
+  .clickable-coords { color: #38bdf8; text-decoration: underline; text-underline-offset: 4px; }
+  
+  /* Manual Location Input */
+  .manual-loc-input {
+    background: transparent; border: none; color: #38bdf8;
+    border-bottom: 1px dashed #38bdf8;
+    font-family: inherit; font-size: inherit; width: 100px;
+    text-align: center;
+  }
+  .manual-loc-input:focus { outline: none; border-bottom-style: solid; }
+  
+  /* Map Picker Modal */
+  .map-modal-overlay {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.9);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .map-container {
+    width: 100%; max-width: 900px; height: 80vh; background: #1e293b;
+    border: 1px solid #3b82f6; border-radius: 12px; overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+  }
+  #leaflet-map { width: 100%; height: 100%; flex: 1; z-index: 1; }
 `;
 
 // --- Visual Components ---
@@ -404,6 +505,183 @@ const ParticleNet = () => {
   return <canvas ref={canvasRef} style={{position:'fixed', top:0, left:0, width:'100%', height:'100%', pointerEvents:'none', zIndex: 0}} />;
 };
 
+const QRPattern = () => (
+  <div className="qr-placeholder" style={{width:120, height:120, background:'white', padding:10, borderRadius:8, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'center'}}>
+    <div style={{display:'grid', gridTemplateColumns:'repeat(5, 1fr)', gap:2, width:'100%', height:'100%'}}>
+      {Array.from({length: 25}).map((_, i) => (
+        <div key={i} style={{background:'black', width:'100%', height:'100%', opacity: Math.random() > 0.5 ? 1 : 0}}></div>
+      ))}
+    </div>
+  </div>
+);
+
+// --- Map Picker Component (with Search) ---
+const MapPicker = ({ initialLoc, onConfirm, onClose }) => {
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
+  const [selected, setSelected] = useState(initialLoc || { lat: 40.7128, lng: -74.0060 });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    // Inject Leaflet resources dynamically
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(link);
+
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.async = true;
+    script.onload = () => {
+       initMap();
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, []);
+
+  const initMap = () => {
+    if (!window.L) return;
+    const L = window.L;
+    
+    // Fix icon issue
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+      iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+    });
+
+    const startLat = selected.lat;
+    const startLng = selected.lng;
+
+    const map = L.map('leaflet-map').setView([startLat, startLng], 13);
+    mapRef.current = map;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    markerRef.current = L.marker([startLat, startLng]).addTo(map);
+
+    map.on('click', (e) => {
+      const { lat, lng } = e.latlng;
+      setSelected({ lat, lng });
+      if (markerRef.current) {
+        markerRef.current.setLatLng([lat, lng]);
+      } else {
+        markerRef.current = L.marker([lat, lng]).addTo(map);
+      }
+    });
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery) return;
+    setIsSearching(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+      const data = await res.json();
+      if (data && data.length > 0) {
+        // Use bounding box if available to zoom correctly to the location (city, street, etc)
+        const location = data[0];
+        const newLat = parseFloat(location.lat);
+        const newLng = parseFloat(location.lon);
+        
+        setSelected({ lat: newLat, lng: newLng });
+        
+        if (mapRef.current && window.L) {
+            if (location.boundingbox) {
+                const southWest = window.L.latLng(location.boundingbox[0], location.boundingbox[2]);
+                const northEast = window.L.latLng(location.boundingbox[1], location.boundingbox[3]);
+                const bounds = window.L.latLngBounds(southWest, northEast);
+                mapRef.current.fitBounds(bounds);
+            } else {
+                mapRef.current.setView([newLat, newLng], 13);
+            }
+
+          if (markerRef.current) {
+             markerRef.current.setLatLng([newLat, newLng]);
+          } else {
+             markerRef.current = window.L.marker([newLat, newLng]).addTo(mapRef.current);
+          }
+        }
+      } else {
+        alert("Location not found");
+      }
+    } catch (error) {
+      console.error("Search failed:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  return (
+    <div className="map-modal-overlay">
+      <div className="map-container">
+        <div style={{padding:'1rem', background:'#0f172a', display:'flex', justifyContent:'space-between', alignItems:'center', borderBottom:'1px solid #334155'}}>
+          <div style={{fontWeight:700, display:'flex', gap:8, alignItems:'center', color:'#3b82f6'}}><MapIcon size={18}/> PINPOINT LOCATION</div>
+          <button onClick={onClose} style={{background:'none', border:'none', color:'white', cursor:'pointer'}}><X/></button>
+        </div>
+        
+        {/* Search Bar */}
+        <div style={{padding: '0.5rem 1rem', background: '#0f172a', display: 'flex', gap: '8px', borderBottom: '1px solid #334155'}}>
+            <input 
+                type="text" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search city, address..."
+                style={{
+                    flex: 1, 
+                    background: '#1e293b', 
+                    border: '1px solid #475569', 
+                    color: 'white', 
+                    padding: '8px', 
+                    borderRadius: '4px',
+                    outline: 'none'
+                }}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            />
+            <button 
+                onClick={handleSearch}
+                disabled={isSearching}
+                style={{
+                    background: '#3b82f6', 
+                    color: 'white', 
+                    border: 'none', 
+                    padding: '0 12px', 
+                    borderRadius: '4px', 
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    fontWeight: 600
+                }}
+            >
+                {isSearching ? <RotateCw className="animate-spin" size={16}/> : <><Search size={16}/> FIND</>}
+            </button>
+        </div>
+
+        <div id="leaflet-map"></div>
+        <div style={{padding:'1rem', background:'#0f172a', display:'flex', justifyContent:'space-between', alignItems:'center', borderTop:'1px solid #334155'}}>
+          <div style={{fontSize:'0.8rem', color:'#94a3b8'}}>
+             Selected: {selected.lat.toFixed(5)}, {selected.lng.toFixed(5)}
+          </div>
+          <div style={{display:'flex', gap:10}}>
+             <button onClick={onClose} style={{background:'transparent', border:'1px solid #64748b', color:'white', padding:'0.5rem 1rem', borderRadius:6, cursor:'pointer'}}>CANCEL</button>
+             <button onClick={() => onConfirm(selected)} style={{background:'#3b82f6', border:'none', color:'white', padding:'0.5rem 1rem', borderRadius:6, cursor:'pointer', fontWeight:700}}>CONFIRM LOCATION</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Mock Data ---
 const DEMO_SCENARIO = {
   emergency_type: "VEHICULAR COLLISION",
@@ -433,9 +711,42 @@ const SentinelAI = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [showRawReport, setShowRawReport] = useState(false);
+  const [showEmergencyModal, setShowEmergencyModal] = useState(false);
   
+  // Location State
+  const [location, setLocation] = useState(null);
+  const [locStatus, setLocStatus] = useState('idle');
+  
+  // Map Picker State
+  const [showMapPicker, setShowMapPicker] = useState(false);
+
   const fileInputRef = useRef(null);
   const t = TRANSLATIONS[lang];
+
+  useEffect(() => {
+    if (showEmergencyModal && !location) {
+      setLocStatus('loading');
+      if (!navigator.geolocation) {
+        setLocStatus('unsupported');
+        return;
+      }
+      try {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+            setLocStatus('success');
+          },
+          (err) => {
+            console.warn("Geolocation permission denied:", err.message);
+            setLocStatus('error');
+          },
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      } catch (e) {
+         setLocStatus('error');
+      }
+    }
+  }, [showEmergencyModal]);
 
   const handleImageUpload = async (e) => {
     if (!e.target.files?.length) return;
@@ -467,10 +778,110 @@ const SentinelAI = () => {
     }, 2500);
   };
 
+  const getLocationString = () => {
+    if (location) return `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
+    return "[Location Unavailable]";
+  };
+
+  const generateReport = () => {
+    const time = new Date().toLocaleString();
+    const type = result?.emergency_type || "Unspecified";
+    const sev = result?.severity || "Unknown";
+    const det = description || "Visual data analyzed";
+    
+    return `SENTINEL AI - EMERGENCY HANDOFF REPORT
+--------------------------------
+TIMESTAMP: ${time}
+TYPE: ${type} (${sev})
+LOC: ${getLocationString()}
+NOTES: ${det}`;
+  };
+
+  const getQRData = () => {
+    return encodeURIComponent(generateReport());
+  };
+
+  const handleDownloadReport = () => {
+    const text = generateReport();
+    
+    // Use fallback for restricted environments
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+      alert("Report Copied");
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
+    }
+
+    document.body.removeChild(textArea);
+    
+    // Also trigger download
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'SENTINEL_REPORT.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  const handleCopyReport = () => {
+    const text = generateReport();
+    
+    // Fallback for restricted environments
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      document.execCommand('copy');
+      alert("Report Copied");
+    } catch (err) {
+      console.error('Fallback: Oops, unable to copy', err);
+    }
+
+    document.body.removeChild(textArea);
+  };
+
+  const handleWhatsApp = () => {
+    const text = encodeURIComponent(generateReport());
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  };
+  
+  const handleMaps = () => {
+    if (location) {
+      window.open(`https://www.google.com/maps?q=${location.lat},${location.lng}`, '_blank');
+    }
+  };
+  
+  const handleMapConfirm = (coords) => {
+    setLocation(coords);
+    setLocStatus('success');
+    setShowMapPicker(false);
+  };
+
+  const handleTTS = () => {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(result?.voice_script || "No script available.");
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert("Text-to-Speech not supported in this browser.");
+    }
+  };
+
   const handleAnalyze = async () => {
     if (!apiKey && images.length > 0) {
-      // Allow demo without key if user presses analyze on empty input, but real analysis needs key
-      setError("API Key is missing in code. Please add your Gemini API Key to line 29.");
+      setError("API Key is missing. Please add your Gemini API Key to the code (line 29).");
       return;
     }
     
@@ -518,8 +929,8 @@ const SentinelAI = () => {
       setResult(JSON.parse(jsonMatch[0]));
     } catch (err) {
       clearInterval(interval);
-      console.error(err);
-      setError(err.message || "Analysis failed.");
+      console.error("Analysis Error:", err);
+      setError(err instanceof Error ? err.message : "Analysis failed.");
     } finally {
       setIsAnalyzing(false);
     }
@@ -564,13 +975,130 @@ const SentinelAI = () => {
                 </div>
               )}
               {view === 'app' && (
-                <a href="tel:911" className="btn btn-danger" style={{textDecoration:'none'}}>
+                <button onClick={() => setShowEmergencyModal(true)} className="btn btn-danger">
                   <Siren size={18} className="animate-pulse" /> {t.call911}
-                </a>
+                </button>
               )}
             </div>
           </div>
         </header>
+      )}
+
+      {/* Map Picker Modal */}
+      {showMapPicker && (
+        <MapPicker 
+          initialLoc={location}
+          onConfirm={handleMapConfirm}
+          onClose={() => setShowMapPicker(false)}
+        />
+      )}
+
+      {/* Expanded Emergency Modal */}
+      {showEmergencyModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button onClick={() => setShowEmergencyModal(false)} style={{position:'absolute', top:24, right:24, background:'none', border:'none', color:'white', cursor:'pointer'}}><X size={24}/></button>
+            
+            <div className="modal-header-row">
+              <div style={{display:'flex', alignItems:'center', gap:16, color:'#f43f5e'}}>
+                <Shield size={40} />
+                <div>
+                  <h2 style={{fontSize:'1.8rem', fontWeight:800, margin:0}}>CRISIS COMMAND</h2>
+                  <p style={{fontSize:'0.9rem', color:'#fca5a5', margin:0}}>Secure Handoff Protocol Active</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="warning-banner">
+              <AlertTriangle size={20} />
+              <span><strong>WARNING:</strong> This interface does not place calls. Use specific actions below.</span>
+            </div>
+            
+            <div className="handoff-grid">
+              {/* Left Column: Transfer & Location */}
+              <div style={{display:'flex', flexDirection:'column', gap:'1.5rem'}}>
+                <div className="script-card" style={{flex:1, alignItems:'center', justifyContent:'center', textAlign:'center'}}>
+                   <div style={{fontSize:'0.8rem', fontWeight:700, color:'#38bdf8', marginBottom:12, textTransform:'uppercase'}}>Mobile Handoff QR</div>
+                   <div className="qr-box">
+                      <img 
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${getQRData()}&color=000000`} 
+                        alt="Scan for Handoff"
+                        style={{width:'100%', height:'100%'}}
+                      />
+                   </div>
+                   <div style={{fontSize:'0.7rem', color:'#94a3b8', marginTop:10}}>Scan to transfer report to phone</div>
+                </div>
+
+                <div className="location-card">
+                   <h3 style={{fontSize:'0.9rem', color:'#38bdf8', textTransform:'uppercase', margin:0}}>Your Coordinates</h3>
+                   
+                   <div className="loc-status" onClick={handleMaps}>
+                     {locStatus === 'loading' && <><RotateCw className="animate-spin" size={16}/> ACQUIRING...</>}
+                     
+                     {locStatus === 'success' && location && (
+                       <>
+                         <div className="pulse-dot"></div> 
+                         <span className="clickable-coords" style={{cursor:'pointer'}}>
+                           {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
+                         </span>
+                         <ExternalLink size={12} className="text-primary ml-1" />
+                       </>
+                     )}
+
+                     {(locStatus === 'error' || locStatus === 'unsupported') && (
+                       <div style={{display:'flex', flexDirection: 'column', gap: 6}}>
+                         <div style={{display:'flex', alignItems:'center', gap:8}}>
+                           <X size={16} color="#ef4444"/> 
+                           <span style={{color:'#f43f5e', fontSize:'0.75rem'}}>AUTO-LOCATION FAILED</span>
+                         </div>
+                         <button 
+                           onClick={(e) => { e.stopPropagation(); setShowMapPicker(true); }} 
+                           style={{background:'none', border:'none', color:'#38bdf8', cursor:'pointer', display:'flex', alignItems:'center', gap:4, fontSize:'0.75rem', fontWeight: 600, padding: 0}}
+                         >
+                            <MapPin size={12}/> FIND ON MAP
+                         </button>
+                       </div>
+                     )}
+                   </div>
+                </div>
+              </div>
+
+              {/* Right Column: Script & Actions */}
+              <div style={{display:'flex', flexDirection:'column', gap:'1.5rem'}}>
+                <div className="script-card">
+                  <div style={{display:'flex', justifyContent:'space-between'}}>
+                    <div style={{fontSize:'0.8rem', fontWeight:700, color:'#94a3b8'}}>OPERATOR SCRIPT</div>
+                    <button onClick={handleTTS} style={{background:'none', border:'none', color:'#38bdf8', cursor:'pointer'}}><Volume2 size={16}/></button>
+                  </div>
+                  <div className="script-text">
+                    "This is an emergency at <strong>{getLocationString()}</strong>. <br/><br/>
+                    I am reporting a <strong>{result?.emergency_type || "Critical Incident"}</strong>. <br/>
+                    {result?.severity || "High"} Severity."
+                  </div>
+                </div>
+
+                <div className="action-grid">
+                   <div className="quick-btn" onClick={handleWhatsApp}>
+                      <MessageCircle size={24} color="#22c55e" />
+                      <span style={{fontSize:'0.8rem', fontWeight:700}}>WHATSAPP</span>
+                   </div>
+                   <div className="quick-btn" onClick={handleMaps}>
+                      <Navigation size={24} color="#3b82f6" />
+                      <span style={{fontSize:'0.8rem', fontWeight:700}}>SAFE POINT</span>
+                   </div>
+                   <div className="quick-btn" onClick={handleCopyReport}>
+                      <Copy size={24} color="#f59e0b" />
+                      <span style={{fontSize:'0.8rem', fontWeight:700}}>COPY LOG</span>
+                   </div>
+                   <a href="tel:911" className="quick-btn" style={{borderColor:'#f43f5e', background:'rgba(244,63,94,0.1)'}}>
+                      <Smartphone size={24} color="#f43f5e" />
+                      <span style={{fontSize:'0.8rem', fontWeight:700, color:'#f43f5e'}}>DIAL 911</span>
+                   </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Landing */}
@@ -699,9 +1227,9 @@ const SentinelAI = () => {
                 <h1 style={{fontSize:'clamp(2.5rem,4vw,3.5rem)', lineHeight:1.1, color:'white'}}>{result.emergency_type}</h1>
               </div>
               {['high', 'critical'].includes(result.severity?.toLowerCase()) && (
-                <a href="tel:911" className="btn btn-danger">
+                <button onClick={() => setShowEmergencyModal(true)} className="btn btn-danger">
                   <Siren size={24} className="animate-pulse"/> {t.call911}
-                </a>
+                </button>
               )}
             </div>
             <div style={{marginTop:'2rem', paddingTop:'1.5rem', borderTop:'1px solid rgba(255,255,255,0.1)'}}>
@@ -714,7 +1242,7 @@ const SentinelAI = () => {
             <div className="flex-col gap-4">
               <div className="card">
                 <div className="flex-center" style={{justifyContent:'flex-start', gap:10, marginBottom:20, color:'#94a3b8', fontWeight:700, fontSize:'0.9rem'}}>
-                  <Scan size={18} color="#0ea5e9"/> {t.hazards}
+                  <Scan size={16}/> {t.hazards}
                 </div>
                 {result.hazards.map((h, i) => (
                   <div key={i} style={{display:'flex', gap:12, marginBottom:10, alignItems:'center', background:'rgba(255,255,255,0.03)', padding:12, borderRadius:8}}>
@@ -722,9 +1250,9 @@ const SentinelAI = () => {
                   </div>
                 ))}
               </div>
-              <div className="card" style={{background:'linear-gradient(135deg, rgba(15,23,42,0.8), rgba(2,6,23,0.9))'}}>
+              <div className="card" style={{background:'linear-gradient(135deg, #1e293b, #0f172a)'}}>
                 <div className="flex-center" style={{justifyContent:'flex-start', gap:10, marginBottom:20, color:'#94a3b8', fontWeight:700, fontSize:'0.9rem'}}>
-                  <Radio size={18} color="#0ea5e9"/> {t.voice}
+                  <Radio size={16}/> {t.voice}
                 </div>
                 <p style={{fontStyle:'italic', fontSize:'1.2rem', color:'white', lineHeight:1.6}}>"{result.voice_script}"</p>
               </div>
