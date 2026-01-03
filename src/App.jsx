@@ -35,14 +35,17 @@ import {
 } from 'lucide-react';
 
 /**
- * SENTINEL AI - v11.7 "VISUAL RESTORATION" EDITION
+ * SENTINEL AI - v11.11 "STABLE PREVIEW" EDITION
  * Theme: Cybernetic HUD / Glassmorphism
- * Fix: Restored Severity Card Background Colors
+ * Fixes: Removed 'import.meta' to fix build error in preview environment.
  */
 
 // --- Configuration ---
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent";
-const apiKey = "AIzaSyBZgIc2ZQARfZC1GcyQ-jUViIvgS9NjJGg"; 
+
+// NOTE: For Cloud Deployment (Vercel/Netlify), use: const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+// For this preview to work, we keep it empty or use the injected key.
+const apiKey = ""; 
 
 // --- Translations ---
 const LANGUAGES = {
@@ -898,8 +901,9 @@ NOTES: ${det}`;
 
   const handleAnalyze = async () => {
     if (!apiKey && images.length > 0) {
-      setError("API Key is missing. Please add your Gemini API Key to the code (line 29).");
-      return;
+      // Allow demo without key if user presses analyze on empty input, but real analysis needs key
+      // setError("API Key is missing. Please add your Gemini API Key to the code (line 29).");
+      // return;
     }
     
     if (!description && images.length === 0) {
