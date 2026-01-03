@@ -42,7 +42,7 @@ import {
 
 // --- Configuration ---
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent";
-const apiKey = "AIzaSyCknfm2AjAcyGmKApK55CnxDn8LP9IJjm8"; 
+const apiKey = "AIzaSyBZgIc2ZQARfZC1GcyQ-jUViIvgS9NjJGg"; 
 
 // --- Translations ---
 const LANGUAGES = {
