@@ -35,15 +35,14 @@ import {
 } from 'lucide-react';
 
 /**
- * SENTINEL AI - v11.5 "GLOBAL OVERWATCH" EDITION
+ * SENTINEL AI - v11.7 "VISUAL RESTORATION" EDITION
  * Theme: Cybernetic HUD / Glassmorphism
- * Feature: Smart Geolocation (GPS + IP Fallback)
- * Fixes: Auto-detect position network error fallback
+ * Fix: Restored Severity Card Background Colors
  */
 
 // --- Configuration ---
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent";
-const apiKey = "AIzaSyAKwIrgnKL8P07Gh_4KcTMVbfMRNCCYNdA"; 
+const apiKey = "AIzaSyCknfm2AjAcyGmKApK55CnxDn8LP9IJjm8"; 
 
 // --- Translations ---
 const LANGUAGES = {
@@ -347,11 +346,31 @@ const cssStyles = `
     transform: scale(1.02);
   }
 
-  /* Severity Borders */
-  .sev-critical { border-left: 4px solid #ef4444; }
-  .sev-high { border-left: 4px solid #f97316; }
-  .sev-medium { border-left: 4px solid #eab308; }
-  .sev-low { border-left: 4px solid #0ea5e9; }
+  /* Severity Styles - Restored & Enhanced */
+  .sev-critical { 
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(2, 6, 23, 0.9));
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 10px 30px -5px rgba(239, 68, 68, 0.2);
+    border-left: 4px solid #ef4444;
+  }
+  .sev-high { 
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(2, 6, 23, 0.9));
+    border: 1px solid rgba(249, 115, 22, 0.3);
+    box-shadow: 0 10px 30px -5px rgba(249, 115, 22, 0.2);
+    border-left: 4px solid #f97316;
+  }
+  .sev-medium { 
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(2, 6, 23, 0.9));
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    box-shadow: 0 10px 30px -5px rgba(234, 179, 8, 0.2);
+    border-left: 4px solid #eab308;
+  }
+  .sev-low { 
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(2, 6, 23, 0.9));
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    box-shadow: 0 10px 30px -5px rgba(14, 165, 233, 0.2);
+    border-left: 4px solid #0ea5e9;
+  }
 
   /* Expanded Modal Styles */
   .modal-overlay {
@@ -820,25 +839,6 @@ NOTES: ${det}`;
 
   const handleDownloadReport = () => {
     const text = generateReport();
-    
-    // Use fallback for restricted environments
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-
-    try {
-      document.execCommand('copy');
-      alert("Report Copied");
-    } catch (err) {
-      console.error('Fallback: Oops, unable to copy', err);
-    }
-
-    document.body.removeChild(textArea);
-    
-    // Also trigger download
     const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
