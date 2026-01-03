@@ -45,7 +45,7 @@ const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/
 
 // NOTE: For Cloud Deployment (Vercel/Netlify), use: const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 // For this preview to work, we keep it empty or use the injected key.
-const apiKey = ""; 
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
 
 // --- Translations ---
 const LANGUAGES = {
