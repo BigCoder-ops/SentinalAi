@@ -16,7 +16,8 @@ import {
   X,
   Plus,
   Play,
-  RotateCw
+  RotateCw,
+  Globe
 } from 'lucide-react';
 
 /**
@@ -161,8 +162,14 @@ const cssStyles = `
     backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 999px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(14, 165, 233, 0.05);
-    display: flex; align-items: center; padding: 0 1.5rem;
+    box-shadow: 
+      0 4px 30px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(14, 165, 233, 0.1),
+      inset 0 0 20px rgba(14, 165, 233, 0.05);
+      
+    display: flex; 
+    align-items: center;
+    padding: 0 1.5rem; /* Padding inside the bar */
     animation: slideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .nav-inner { width: 100%; display: flex; align-items: center; justify-content: space-between; }
@@ -416,6 +423,7 @@ const DEMO_SCENARIO = {
 const SentinelAI = () => {
   const [view, setView] = useState('landing');
   const [lang, setLang] = useState('en');
+  // State for multiple images
   const [images, setImages] = useState([]);
   
   const [description, setDescription] = useState("");
@@ -541,6 +549,7 @@ const SentinelAI = () => {
             </div>
             
             <div className="flex-center" style={{gap:'1.5rem'}}>
+              {/* Language Tabs - Always Visible */}
               {view === 'landing' && (
                 <div className="lang-group">
                   {Object.keys(LANGUAGES).map(key => (
@@ -581,6 +590,9 @@ const SentinelAI = () => {
             <button onClick={runSimulation} className="btn btn-secondary"><Play size={20}/> {t.demo}</button>
           </div>
           
+          <footer style={{position:'absolute', bottom:'2rem', fontSize:'0.75rem', color:'#64748b', letterSpacing:'0.2em', fontWeight:500}}>
+            CREATED BY <a href="https://www.coderops.me/" target="_blank" rel="noopener noreferrer" style={{color:'white', textDecoration:'none', cursor:'pointer'}}>MOHAMED MAHZOUL</a>
+          </footer>
         </main>
       )}
 
@@ -607,7 +619,7 @@ const SentinelAI = () => {
           </div>
 
           <div className="grid-layout">
-            <div className="upload-box" onClick={() => fileInputRef.current.click()}>
+            <div className="upload-box" onClick={() => images.length === 0 ? fileInputRef.current.click() : null}>
               <div className="upload-scanline"></div>
               <div className="crosshair-tl"></div><div className="crosshair-tr"></div><div className="crosshair-bl"></div><div className="crosshair-br"></div>
               
