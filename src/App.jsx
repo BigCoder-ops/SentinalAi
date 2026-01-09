@@ -26,26 +26,33 @@ import {
   MessageCircle, 
   Share2,
   Volume2,
+  VolumeX,
   Navigation,
   QrCode,
   ExternalLink,
   Edit3,
   Map as MapIcon,
-  Search
+  Search,
+  CheckSquare, 
+  Square,
+  Eye,
+  Mic,
+  Terminal
 } from 'lucide-react';
 
 /**
- * SENTINEL AI - v11.11 "STABLE PREVIEW" EDITION
+ * SENTINEL AI - v12.2 "KINETIC GUIDE" EDITION
  * Theme: Cybernetic HUD / Glassmorphism
- * Fixes: Removed 'import.meta' to fix build error in preview environment.
+ * Feature: Enhanced, Reactive Walkthrough Animations with Entry/Exit
  */
 
 // --- Configuration ---
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent";
 
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent";
 // NOTE: For Cloud Deployment (Vercel/Netlify), use: const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 // For this preview to work, we keep it empty or use the injected key.
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
+
 
 // --- Translations ---
 const LANGUAGES = {
@@ -76,16 +83,17 @@ const TRANSLATIONS = {
     log: "Incident Log",
     call911: "Emergency Handoff",
     newScan: "Reset System",
+    voiceMode: "Voice Guidance",
     types: ["Uncertain / General", "Medical Emergency", "Fire / Hazard", "Natural Disaster", "Traffic Accident", "Violence / Threat"]
   },
-  es: { heroTitle: "Inteligencia de Crisis.", heroSubtitle: "Protocolos de respuesta inmediata guiados por IA.", enter: "Activar Sistema", demo: "Ejecutar Simulación", status: "SISTEMA LISTO", upload: "Subir datos visuales", analyzing: "Analizando...", tapCapture: "Subir Foto", orUpload: "Soporte: JPG, PNG", analyze: "Evaluar Amenaza", call911: "Protocolo Emergencia", newScan: "Nuevo Incidente", hazards: "Amenazas", voice: "Guión", actionPlan: "Protocolo", log: "Reporte", severity: "Severidad", types: ["General", "Médico", "Fuego", "Desastre", "Tráfico", "Violencia"] },
-  fr: { heroTitle: "Intelligence de Crise.", heroSubtitle: "Protocoles d'intervention immédiate guidés par l'IA.", enter: "Activer Système", demo: "Lancer Simulation", status: "SYSTÈME PRÊT", upload: "Télécharger données", analyzing: "Analyse...", tapCapture: "Photo Scène", orUpload: "Support: JPG, PNG", analyze: "Évaluer Menace", call911: "Protocole Urgence", newScan: "Nouvel Incident", hazards: "Menaces", voice: "Script", actionPlan: "Protocole", log: "Rapport", severity: "Sévérité", types: ["Général", "Médical", "Feu", "Catastrophe", "Trafic", "Violence"] },
-  de: { heroTitle: "Krisenintelligenz.", heroSubtitle: "Sofortige, KI-gesteuerte Reaktionsprotokolle.", enter: "System Aktivieren", demo: "Simulation Starten", status: "SYSTEM BEREIT", upload: "Daten hochladen", analyzing: "Analysiere...", tapCapture: "Foto hochladen", orUpload: "Format: JPG, PNG", analyze: "Bedrohung Prüfen", call911: "Notfall Protokoll", newScan: "Neuer Vorfall", hazards: "Gefahren", voice: "Skript", actionPlan: "Protokoll", log: "Bericht", severity: "Schweregrad", types: ["Allgemein", "Medizinisch", "Feuer", "Katastrophe", "Verkehr", "Gewalt"] }
+  es: { heroTitle: "Inteligencia de Crisis.", heroSubtitle: "Protocolos de respuesta inmediata guiados por IA.", enter: "Activar Sistema", demo: "Ejecutar Simulación", status: "SISTEMA LISTO", upload: "Subir datos visuales", analyzing: "Analizando...", tapCapture: "Subir Foto", orUpload: "Soporte: JPG, PNG", analyze: "Evaluar Amenaza", call911: "Protocolo Emergencia", newScan: "Nuevo Incidente", hazards: "Amenazas", voice: "Guión", actionPlan: "Protocolo", log: "Reporte", severity: "Severidad", voiceMode: "Guía de Voz", types: ["General", "Médico", "Fuego", "Desastre", "Tráfico", "Violencia"] },
+  fr: { heroTitle: "Intelligence de Crise.", heroSubtitle: "Protocoles d'intervention immédiate guidés par l'IA.", enter: "Activer Système", demo: "Lancer Simulation", status: "SYSTÈME PRÊT", upload: "Télécharger données", analyzing: "Analyse...", tapCapture: "Photo Scène", orUpload: "Support: JPG, PNG", analyze: "Évaluer Menace", call911: "Protocole Urgence", newScan: "Nouvel Incident", hazards: "Menaces", voice: "Script", actionPlan: "Protocole", log: "Rapport", severity: "Sévérité", voiceMode: "Guidage Vocal", types: ["Général", "Médical", "Feu", "Catastrophe", "Trafic", "Violence"] },
+  de: { heroTitle: "Krisenintelligenz.", heroSubtitle: "Sofortige, KI-gesteuerte Reaktionsprotokolle.", enter: "System Aktivieren", demo: "Simulation Starten", status: "SYSTEM BEREIT", upload: "Daten hochladen", analyzing: "Analysiere...", tapCapture: "Foto hochladen", orUpload: "Format: JPG, PNG", analyze: "Bedrohung Prüfen", call911: "Notfall Protokoll", newScan: "Neuer Vorfall", hazards: "Gefahren", voice: "Skript", actionPlan: "Protokoll", log: "Bericht", severity: "Schweregrad", voiceMode: "Sprachführung", types: ["Allgemein", "Medizinisch", "Feuer", "Katastrophe", "Verkehr", "Gewalt"] }
 };
 
 // --- CSS STYLES ---
 const cssStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
   :root {
     --bg-deep: #020617;
@@ -96,6 +104,7 @@ const cssStyles = `
     --text-muted: #94a3b8;
     --radius-lg: 16px;
     --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -139,6 +148,10 @@ const cssStyles = `
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
   @keyframes slideDown {
     from { transform: translateY(-100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
@@ -158,6 +171,31 @@ const cssStyles = `
     20% { opacity: 1; }
     80% { opacity: 1; }
     100% { top: 100%; opacity: 0; }
+  }
+  
+  /* Walkthrough Specific Animations */
+  @keyframes wt-modal-in {
+    0% { opacity: 0; transform: scale(0.9) translateY(40px) perspective(1000px) rotateX(10deg); filter: blur(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0) perspective(1000px) rotateX(0deg); filter: blur(0px); }
+  }
+  @keyframes wt-modal-out {
+    0% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0px); }
+    100% { opacity: 0; transform: scale(1.1) translateY(-20px); filter: blur(20px); }
+  }
+  @keyframes wt-scan-v {
+    0% { top: -10%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 110%; opacity: 0; }
+  }
+  @keyframes wt-pulse-scale {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+  }
+  @keyframes wt-glitch-text {
+    0% { opacity: 0; transform: translateX(-10px); }
+    100% { opacity: 1; transform: translateX(0); }
   }
 
   .anim-entry { animation: slideUpFade 0.8s var(--ease) forwards; opacity: 0; }
@@ -481,6 +519,83 @@ const cssStyles = `
     box-shadow: 0 0 50px rgba(0,0,0,0.8);
   }
   #leaflet-map { width: 100%; height: 100%; flex: 1; z-index: 1; }
+  
+  /* Checklist */
+  .checkbox-wrapper {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+  }
+  .checkbox-wrapper:hover {
+    color: var(--primary);
+  }
+  .step-dimmed {
+    opacity: 0.5;
+    filter: grayscale(0.5);
+  }
+
+  /* Walkthrough Overlay */
+  .walkthrough-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(2, 6, 23, 0.9);
+    backdrop-filter: blur(20px);
+    display: flex; align-items: center; justify-content: center;
+    animation: wt-modal-in 0.6s var(--ease-elastic) forwards;
+  }
+  .walkthrough-card {
+    position: relative; width: 100%; max-width: 550px;
+    background: linear-gradient(145deg, #0f172a, #020617);
+    border: 1px solid rgba(14, 165, 233, 0.4);
+    border-radius: 24px; padding: 3rem;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.8), inset 0 0 40px rgba(14, 165, 233, 0.05);
+    text-align: center;
+    overflow: hidden;
+  }
+  .walkthrough-card.closing {
+    animation: wt-modal-out 0.4s var(--ease) forwards;
+  }
+
+  .wt-progress {
+    display: flex; justify-content: center; gap: 12px; margin-bottom: 2.5rem;
+  }
+  .wt-dot {
+    width: 30px; height: 4px; border-radius: 2px;
+    background: rgba(255,255,255,0.1); transition: 0.4s var(--ease);
+  }
+  .wt-dot.active { background: #0ea5e9; width: 50px; box-shadow: 0 0 15px #0ea5e9; }
+  .wt-dot.completed { background: #10b981; }
+
+  .wt-icon-wrapper {
+    width: 120px; height: 120px; margin: 0 auto 2rem;
+    background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(14, 165, 233, 0.2);
+    position: relative;
+    transition: 0.5s var(--ease);
+  }
+  
+  /* Animation Mixins */
+  .wt-anim-scan::after {
+    content: ''; position: absolute; width: 100%; height: 4px; background: #0ea5e9;
+    box-shadow: 0 0 20px #0ea5e9; animation: wt-scan-v 2.5s ease-in-out infinite; opacity: 0.8;
+  }
+  .wt-anim-pulse { animation: wt-pulse-scale 2s infinite; }
+  .wt-anim-flash::before {
+     content: ''; position: absolute; inset: -5px; border-radius: 50%;
+     background: rgba(245, 158, 11, 0.1); animation: wt-flash 1s infinite alternate;
+  }
+  .wt-anim-ripple::after {
+     content: ''; position: absolute; inset: 0; border-radius: 50%;
+     border: 2px solid #10b981; animation: wt-ripple 2.5s infinite;
+  }
+  .wt-anim-siren { animation: wt-pulse-scale 0.6s infinite alternate; border-color: #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
+
+  .wt-title { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; color: white; transition: 0.3s; letter-spacing: -0.03em; }
+  .wt-desc { font-size: 1.1rem; color: #94a3b8; line-height: 1.6; margin-bottom: 3rem; height: 4em; }
+  .wt-content-box { animation: wt-glitch-text 0.5s var(--ease-elastic); }
 `;
 
 // --- Visual Components ---
@@ -572,7 +687,6 @@ const MapPicker = ({ initialLoc, onConfirm, onClose }) => {
     if (!window.L) return;
     const L = window.L;
     
-    // Fix icon issue
     delete L.Icon.Default.prototype._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -610,7 +724,6 @@ const MapPicker = ({ initialLoc, onConfirm, onClose }) => {
       const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
       const data = await res.json();
       if (data && data.length > 0) {
-        // Use bounding box if available to zoom correctly to the location (city, street, etc)
         const location = data[0];
         const newLat = parseFloat(location.lat);
         const newLng = parseFloat(location.lon);
@@ -704,6 +817,100 @@ const MapPicker = ({ initialLoc, onConfirm, onClose }) => {
   );
 };
 
+// --- Walkthrough Component ---
+const WalkthroughModal = ({ onComplete }) => {
+  const [step, setStep] = useState(0);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const steps = [
+    {
+      title: "Visual Uplink",
+      desc: "Upload photos from the scene. Sentinel AI scans for hazards, injuries, and environmental threats in real-time.",
+      icon: <Camera size={56} color="#0ea5e9" />,
+      color: "#0ea5e9",
+      animation: "wt-anim-scan"
+    },
+    {
+      title: "AI Analysis",
+      desc: "Our Gemini-powered engine correlates visual data with your description to identify the emergency type and severity.",
+      icon: <Cpu size={56} color="#8b5cf6" />,
+      color: "#8b5cf6",
+      animation: "wt-anim-pulse"
+    },
+    {
+      title: "Tactical Protocols",
+      desc: "Receive step-by-step guidance based on global safety standards (Red Cross / TCCC) to stabilize the situation.",
+      icon: <Zap size={56} color="#f59e0b" />,
+      color: "#f59e0b",
+      animation: "wt-anim-flash"
+    },
+    {
+      title: "Voice Command",
+      desc: "Enable text-to-speech for hands-free guidance while you administer aid or secure the scene.",
+      icon: <Volume2 size={56} color="#10b981" />,
+      color: "#10b981",
+      animation: "wt-anim-ripple"
+    },
+    {
+      title: "Emergency Handoff",
+      desc: "Generate a precise situation report and transfer it to your phone or sharing apps for 911 dispatchers.",
+      icon: <Siren size={56} color="#ef4444" />,
+      color: "#ef4444",
+      animation: "wt-anim-siren"
+    }
+  ];
+
+  const handleNext = () => {
+    if (step < steps.length - 1) {
+      setStep(step + 1);
+    } else {
+      handleClose();
+    }
+  };
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(onComplete, 400); // Match animation duration
+  };
+
+  return (
+    <div className="walkthrough-overlay">
+      <div className={`walkthrough-card ${isClosing ? 'closing' : ''}`}>
+        <div className="wt-progress">
+          {steps.map((_, i) => (
+            <div 
+              key={i} 
+              className={`wt-dot ${i === step ? 'active' : ''} ${i < step ? 'completed' : ''}`}
+            />
+          ))}
+        </div>
+        
+        {/* Dynamic Content Area with Key to Force Re-render Animation */}
+        <div key={step} className="wt-content-box">
+          <div className={`wt-icon-wrapper ${steps[step].animation}`} style={{borderColor: steps[step].color}}>
+            {steps[step].icon}
+          </div>
+          
+          <h2 className="wt-title" style={{color: steps[step].color}}>{steps[step].title}</h2>
+          <p className="wt-desc">{steps[step].desc}</p>
+        </div>
+        
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+          <button onClick={handleClose} style={{background:'none', border:'none', color:'#64748b', cursor:'pointer', fontSize:'0.9rem', fontWeight:600}}>SKIP INTEL</button>
+          <button 
+            onClick={handleNext} 
+            className="btn btn-primary"
+            style={{boxShadow: `0 0 30px ${steps[step].color}40`, borderColor: steps[step].color}}
+          >
+            {step === steps.length - 1 ? 'INITIALIZE SYSTEM' : 'NEXT STEP'} <ArrowRight size={18}/>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 // --- Mock Data ---
 const DEMO_SCENARIO = {
   emergency_type: "VEHICULAR COLLISION",
@@ -742,10 +949,23 @@ const SentinelAI = () => {
   // Map Picker State
   const [showMapPicker, setShowMapPicker] = useState(false);
 
+  // New features
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [completedSteps, setCompletedSteps] = useState(new Set());
+  
+  // Walkthrough State
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
+
   const fileInputRef = useRef(null);
   const t = TRANSLATIONS[lang];
 
   useEffect(() => {
+    // Check if user has seen walkthrough
+    const hasSeen = localStorage.getItem('sentinel_walkthrough_completed');
+    if (!hasSeen) {
+      setShowWalkthrough(true);
+    }
+
     if (showEmergencyModal && !location) {
       setLocStatus('loading');
       
@@ -786,6 +1006,11 @@ const SentinelAI = () => {
       );
     }
   }, [showEmergencyModal]);
+
+  const completeWalkthrough = () => {
+    setShowWalkthrough(false);
+    localStorage.setItem('sentinel_walkthrough_completed', 'true');
+  };
 
   const handleImageUpload = async (e) => {
     if (!e.target.files?.length) return;
@@ -855,7 +1080,6 @@ NOTES: ${det}`;
   const handleCopyReport = () => {
     const text = generateReport();
     
-    // Fallback for restricted environments
     const textArea = document.createElement("textarea");
     textArea.value = text;
     textArea.style.position = "fixed";
@@ -890,6 +1114,12 @@ NOTES: ${det}`;
     setShowMapPicker(false);
   };
 
+  const speak = (text) => {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
+  };
+
   const handleTTS = () => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(result?.voice_script || "No script available.");
@@ -897,6 +1127,42 @@ NOTES: ${det}`;
     } else {
       alert("Text-to-Speech not supported in this browser.");
     }
+  };
+
+  // Effect for Auto-Voice and Reset Checklist
+  useEffect(() => {
+    setCompletedSteps(new Set()); // Clear on new result
+    
+    if (result && (voiceEnabled || result.severity.toLowerCase() === 'critical')) {
+      if (result.severity.toLowerCase() === 'critical' && !voiceEnabled) {
+        setVoiceEnabled(true);
+      }
+      
+      const textToSpeak = `${result.immediate_alert}. ${result.instructions.map(i => i.text).join('. ')}`;
+      speak(textToSpeak);
+    }
+    
+    return () => window.speechSynthesis.cancel();
+  }, [result]); // Runs when result changes
+
+  const toggleVoice = () => {
+    if (voiceEnabled) {
+      window.speechSynthesis.cancel();
+    } else if (result) {
+      const textToSpeak = `${result.immediate_alert}. ${result.instructions.map(i => i.text).join('. ')}`;
+      speak(textToSpeak);
+    }
+    setVoiceEnabled(!voiceEnabled);
+  };
+
+  const toggleStep = (index) => {
+    const newSet = new Set(completedSteps);
+    if (newSet.has(index)) {
+      newSet.delete(index);
+    } else {
+      newSet.add(index);
+    }
+    setCompletedSteps(newSet);
   };
 
   const handleAnalyze = async () => {
@@ -933,7 +1199,6 @@ NOTES: ${det}`;
           contents: [{ parts }],
           systemInstruction: { parts: [{ text: systemPrompt }] },
           generationConfig: { responseMimeType: "application/json" },
-          // Safety Settings removed for brevity, handled by model defaults or add if needed
         })
       });
 
@@ -972,6 +1237,11 @@ NOTES: ${det}`;
       <style>{cssStyles}</style>
       <ParticleNet />
       
+      {/* Walkthrough Overlay */}
+      {showWalkthrough && (
+        <WalkthroughModal onComplete={completeWalkthrough} />
+      )}
+
       {/* Navbar */}
       {(view === 'landing' || view === 'app') && (
         <header className="navbar flex-row">
@@ -1157,9 +1427,6 @@ NOTES: ${det}`;
             <button onClick={runSimulation} className="btn btn-secondary"><Play size={20}/> {t.demo}</button>
           </div>
           
-          <footer style={{position:'absolute', bottom:'2rem', fontSize:'0.75rem', color:'#64748b', letterSpacing:'0.2em', fontWeight:500}}>
-            CREATED BY <a href="https://www.coderops.me/" target="_blank" rel="noopener noreferrer" style={{color:'white', textDecoration:'none', cursor:'pointer'}}>MOHAMED MAHZOUL</a>
-          </footer>
         </main>
       )}
 
@@ -1254,8 +1521,18 @@ NOTES: ${det}`;
             <button onClick={() => setResult(null)} className="btn btn-secondary">
               <ChevronRight size={18} style={{transform:'rotate(180deg)'}} /> {t.newScan}
             </button>
-            <div style={{display:'inline-flex', alignItems:'center', gap:8, padding:'6px 12px', background:'rgba(239,68,68,0.1)', borderRadius:99, border:'1px solid rgba(239,68,68,0.3)', color:'#ef4444', fontSize:'0.75rem', fontWeight:700}}>
-              <span style={{width:8, height:8, background:'#ef4444', borderRadius:'50%'}} className="animate-pulse"></span> LIVE INCIDENT
+            <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
+               <button 
+                 onClick={toggleVoice} 
+                 className={`btn btn-secondary ${voiceEnabled ? 'active' : ''}`}
+                 style={{padding: '0.6rem 1rem', borderColor: voiceEnabled ? '#0ea5e9' : 'rgba(255,255,255,0.2)', color: voiceEnabled ? '#0ea5e9' : 'white'}}
+               >
+                 {voiceEnabled ? <Volume2 size={18}/> : <VolumeX size={18}/>}
+                 {voiceEnabled ? 'VOICE ON' : 'VOICE OFF'}
+               </button>
+               <div style={{display:'inline-flex', alignItems:'center', gap:8, padding:'6px 12px', background:'rgba(239,68,68,0.1)', borderRadius:99, border:'1px solid rgba(239,68,68,0.3)', color:'#ef4444', fontSize:'0.75rem', fontWeight:700}}>
+                  <span style={{width:8, height:8, background:'#ef4444', borderRadius:'50%'}} className="animate-pulse"></span> LIVE INCIDENT
+               </div>
             </div>
           </div>
 
@@ -1302,10 +1579,31 @@ NOTES: ${det}`;
                 <Zap size={28} color="#0ea5e9"/> <h2 style={{fontSize:'1.5rem', color:'white'}}>{t.actionPlan}</h2>
               </div>
               {result.instructions.map((step, i) => (
-                <div key={i} className="anim-entry" style={{display:'flex', gap:20, marginBottom:20, background:'rgba(255,255,255,0.02)', padding:24, borderRadius:16, border:'1px solid rgba(255,255,255,0.05)', animationDelay: `${i*100}ms`}}>
-                  <div style={{width:36, height:36, background:'#1e293b', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:'#0ea5e9', flexShrink:0, border:'1px solid rgba(14, 165, 233, 0.3)'}}>{i+1}</div>
-                  <div>
-                    <div style={{fontSize:'1.2rem', fontWeight:600, marginBottom:10, color:'white'}}>{step.text}</div>
+                <div 
+                   key={i} 
+                   className={`anim-entry ${completedSteps.has(i) ? 'step-dimmed' : ''}`}
+                   style={{
+                     display:'flex', gap:20, marginBottom:20, 
+                     background: completedSteps.has(i) ? 'rgba(255,255,255,0.01)' : 'rgba(255,255,255,0.03)', 
+                     padding:24, borderRadius:16, 
+                     border: completedSteps.has(i) ? '1px solid rgba(255,255,255,0.02)' : '1px solid rgba(255,255,255,0.08)', 
+                     animationDelay: `${i*100}ms`
+                   }}
+                >
+                  <div 
+                     className="checkbox-wrapper" 
+                     onClick={() => toggleStep(i)}
+                     style={{
+                        minWidth: 40, height: 40, 
+                        background: completedSteps.has(i) ? 'rgba(14,165,233,0.1)' : '#1e293b', 
+                        borderRadius: 8, border: completedSteps.has(i) ? '1px solid #0ea5e9' : '1px solid #475569',
+                        color: completedSteps.has(i) ? '#0ea5e9' : '#64748b'
+                     }}
+                  >
+                     {completedSteps.has(i) ? <CheckSquare size={20} /> : <span style={{fontWeight:700}}>{i+1}</span>}
+                  </div>
+                  <div style={{flex: 1}}>
+                    <div style={{fontSize:'1.2rem', fontWeight:600, marginBottom:10, color: completedSteps.has(i) ? '#94a3b8' : 'white', textDecoration: completedSteps.has(i) ? 'line-through' : 'none'}}>{step.text}</div>
                     {step.safety_warning && <div style={{display:'inline-flex', alignItems:'center', gap:8, fontSize:'0.9rem', color:'#ef4444', background:'rgba(239,68,68,0.1)', padding:'6px 12px', borderRadius:6}}><Shield size={14}/> {step.safety_warning}</div>}
                   </div>
                 </div>
